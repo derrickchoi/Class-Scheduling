@@ -1,0 +1,80 @@
+System Name: pa3final.cpp							Derrick Choi
+
+System Description:
+The system takes a prompt from the user to read the name of a file and its three sections. Any line that starts with two dashes (--) is a comment line and my program will ignore it. The first section is available rooms with three fields, the second section is courses taught with seven fields, the third section is constraints with four fields. The system outputs a final schedule by classroom and class by assigning meeting days and times for the classes.
+
+Global Data
+The global data consists of four structs, three which are given in the assignment. They are of struct Room, Course, Section_Constraints and Section. The fourth one is of Scheduled_Sections added later on for the functions, which consists of int section_id, course_number, startTime, endTime, array of days size four and string prefix. It is used mainly in the printScheduleByClass void and scheduleAvailable bool functions.
+Other global data includes string buffer.
+Global variables like int roomCount, scheduledCount, sectionCount, sectionCount, courseCount and nextVar are initialized at 0 to keep track of count of members in the structures. There is also a char of filein array size 265. 
+Lastly, the name of the structs are used as data types in declaring new pointer type names of *rooms, *courses, * constraints, *sections and *scheduledSections respectively. 
+Function/Class Descriptions
+
+Main (at the end of the whole system)
+•	Function formal parameters and their type: No formal parameters and type
+•	Function return type: Return 0. Doesn’t matter as it is not used by the system
+•	Function description: I started from welcoming the user to the game and asking them to input a file. The program stores the information and ignores the lines with “—“ and skips. If the file is formatted incorrectly, then I will prompt the user to reformat the file and try again. The read file function is basically in the main function and I split it up into all three sections. I firstly use dynamic allocation eg. rooms = new Room[roomCount] because we do not know how big of a file the user inputs into the program. I use stringstream for the inputs and if ss fails, then the program breaks. I do this for all the sections of the input file. It is good to note that I use a if statement at the start of the second and third input section with nextVar==1 and nextVar==2 to check that I am in the next section. While reading the file, I increment roomCount in the first section and courseCount and sectionCount in the second section. The file closes after reading all of the data. If the file is unable to open, it outputs unable to open file to the user. Lastly, I put in some of the printed results at the last part of main along with the functions used in the whole system. I cout schedule by class and schedule by classroom. At the end, I let the user know that if scheduledCount is not larger than 0, then the classes cannot have a valid assignment. Return 0 after that. 
+
+•	Compiling and testing: To compile: g++ -o pa3 pa3final.cpp
+findSectionNumber 
+•	Function formal parameters and their type: int sectionID 
+•	Function return type: It returns the pointer data of sections + i.section_number
+•	Function description: Given a section id, this function returns the corresponding section number. I use a for statement that increments to less than the sectionCount along with an if statement that compares the sectionID with the pointer section_id. If it is the same, then the function returns data.
+
+findSectionStudents
+•	Function formal parameters and their type: int sectionID
+•	Function return type: It returns the pointer data of sections +i.num_students
+•	Function description: Similar to the above, given a section id, this function returns the corresponding number of students in the section. The algorithm is the same as above except it returns the pointer data of num_students instead of section_number.
+
+finddays
+•	Function formal parameters and their type: a string function with parameter and type int days[]
+•	Function return type: return value of the string of days
+•	Function description: This functions sets the corresponding days in the string based on the values set in the date array in the parameter. If the 0th position in the days array is the same as 1, then the return strDays (initialized above) is “M”. Similarly, the others are “T”,  “W” and “R” for Monday, Tuesday, Wednesday and Thursday. They are all compared to 1 but the index of the array increases each time.
+
+printScheduleByClass
+•	Function formal parameters and their type: None
+•	Function return type: None because it is a void function
+•	Function description: This function merely prints out the final schedule for different classes for the whole system. I use two for loops, one within the other and the innermost if loop. The first for loop is to print the string of course prefix as it is only printed once for all the courses that have the same prefix. Inside the second for loop, it has an if statement that compares the prefix to see if they are the same course. If they are, then it outputs the course ID, section #, # of students, room, capacity and meeting day/time and goes back to the for loop again until both the for loops have reached its max. At that point, all the courses are printed out with the details.
+
+printScheduleByClassroom
+•	Function formal parameters and their type: None
+•	Function return type: None because it is a void function
+•	Function description: This function is almost exactly the same as the printScheduleByClass function above. What differs from the above is that I have two stringstream elements. Instead of the class number, I am outputting the room number along with its capacity. The first stringstream is storing the pointer data of room_number with the rooms added by the incrementing j in the for loop. The second stringstream sscap is stroing the  max_students instead. The string c2 outputs the room and its number along with the capacity of the room. The inner for loop increments right up to before the scheduledCount and uses the stringstream ss1 and sscap1 to store the room_number and max_students, with string c outputting the room number and capacity. Lastly, the inner most if loop compares the value of c2 with c. If they are the same then, the program knows that the courses are still in the same classroom and outputs the data until the if statement becomes false and goes back to the for statements above. 
+
+fixTime
+•	Function formal parameters and their type: int constraintStartTime and int numMinutes
+•	Function return type: int (hours*100)+minutes to return the constrainttime
+•	Function description: This function incrememnts the constraint time by the number of minutes. There are two if statements. One checks if the minutes is over or equal to 60 and differentiates between hours and minutes. The second if statement checks if the hours is over or equal to 24 and then it converts it back to military time with modulus 24.
+
+roomsMatch
+•	Function formal parameters and their type: Room scheduleRoom and Room room
+•	Function return type: bool function that returns either true or false 
+•	Function description: This function checks whether the room number for both scheduled room and the given room are the same. There is one if statement that compares scheduledRoom.room_number with room.room_number in the structs. If the if statement is true, then it returns true. If not, it returns false.
+
+daysMatch
+•	Function formal parameters and their type: int* scheduledDays, int* constraintDays
+•	Function return type: bool function that returns either true or false
+•	Function description: This function checks whether the days array for both scheduled room and given room are the same. There is an outer for statement with an inner if statement that compares whether the scheduledDays array is equal or not to the constraintDays array. If not, it returns false. If yes, it returns true.
+
+sortRooms
+•	Function formal parameters and their type: None
+•	Function return type: None because it is a void function
+•	Function description: This function sorts the room based on the capacity in descending order. There is an outer for statement with an inner for statement. That counts up the roomCount. The innermost if loop checks if the max_students outer struct component is less than the max_students component for the inner for loop. Then there is a tempRoom that shuffles the rooms.
+
+timesOverlap
+•	Function formal parameters and their type: int scheduledStartTime, scheduledEndTime, constraintStartTime, constraintEndTime, numMinutes
+•	Function return type: int function that returns the constraintStartTime
+•	Function description: This functions is looking for a start time and end time, for the current class, that does not overlap the scheduled start and end time, that are provided. I initialize the bool scheduled as false. When scheduled is true, it runs the if statement. The if statement contains a statement that if the constraintStartTime is larger or equal to the scheduledStartTime and also if th constraintStartTime is less or equal to the scheduledEndTime with an or condition after. It is is true, the function returns the time with an advance of 10 minutes. Else, the function breaks.
+
+scheduleAvailable 
+•	Function formal parameters and their type: Section sectionToSchedule and int roomIndex
+•	Function return type: return canSchedule
+•	Function description: This function finds available scheduling times for the classes. Nine ints are declared at the beginning and a bool canSchedule set to false. I check whether we can schedule the classes, if it is possible, it exits the while loop. Then I check if there is a conflict with an already scheduled section with new ints declared. An if statement checks whether the section can be scheduled. If not, there is a break. Then I check if the needed room matches the already scheduled room with the roomsMatch function. Then I use the daysMatch and timesOverlap to check the time and overlap respectively.  Then there are if statements that check whether the section can be scheduled in a room. Then try a bugger room. Then the while loop is exited and another if statement that checks the section start time.  Another couple if statements check whether a new start time is needed and actually scheduling the section is canSchedule is true, with an inner for loop that copies the day values into the aray. 
+
+scheduleSections
+•	Function formal parameters and their type: None
+•	Function return type: return true
+•	Function description: This function schedules sections from he largest room to the smallest room in section size. It schedules all classes tha can only fit in the largest room, that hasn’t yet been scheduled. It continues with the next largest room. It assumes that the rooms array is sorted from largest room to smallest. A for loop uses roomCount -1 to check two room size values a time. An innter for loop checks if the room can be scheduled for the room. If the room cannot be scheduled it outputs that it does not scheduled. Function returns false if it is this case.
+
+Compiling and Testing
+My file name is pa3final.cpp and it compiles normally. I tested the program with my good.txt and bad.txt to compare the results. To compile: g++ -o pa3final pa3final.cpp
